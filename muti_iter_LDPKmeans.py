@@ -246,8 +246,8 @@ print ("初始中心点：",iter_centroid)
 
 # 提取数据集
 # 方法1 本地读取
-data_set1="F:\\data\\Simulation_data.csv"
-data_set2="F:\\data\\test1.csv"
+data_set1="data\\Simulation_data.csv"
+data_set2="data\\test1.csv"
 method1_data = np.loadtxt(open(data_set1,"rb"),delimiter=",",skiprows=0)
 # 方法2 内存生成
 a=[[0.8, 0.8], [0.4, 0.4],[-0.4, -0.4],[-0.8,-0.8],[0.5,0.1]]
