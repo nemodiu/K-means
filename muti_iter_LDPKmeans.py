@@ -216,6 +216,7 @@ def measurescore(test_data, y_true,y_pred):
     # 戴维森堡丁指数(DBI)——davies_bouldin_score, 取值越小越好
     score_db=metrics.davies_bouldin_score(test_data, y_pred)
 
+
     # label_true:
     # 1.Mutual Information based scores 互信息 [0,1] 取值越大越好
     score_mi=metrics.adjusted_mutual_info_score(y_true,y_pred)
@@ -231,7 +232,7 @@ def measurescore(test_data, y_true,y_pred):
 
 
 # 参数设置：
-Epsilon=.05  # 隐私预算
+Epsilon=.999  # 隐私预算
 k_num=4     # 聚类个数
 iter_max_times=20
 # 初始中心点
