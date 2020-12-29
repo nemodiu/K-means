@@ -23,7 +23,11 @@ print(a)
 
 a=np.random.random((10,3))
 print(a)
-b=np.min(a[:,1],axis=0)
-print(b,b.shape)
-print(b[0])
+
 print()
+
+a=np.array([])
+print(a.shape)
+
+if not a.shape[1]:
+    print("aaa")
