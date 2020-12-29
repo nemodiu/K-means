@@ -8,11 +8,17 @@ def fun_trans_c(epsilon,m,n,d):
     a1=14*math.log(4*(m+1)/d)
     #a=((n-1)*)**0.5
     a2=a*a1/(n-1)
-    #a3=math.sqrt(a2)*(2*(m+1))
-    a3 = math.sqrt(a2)
-    print(a3)
+    a3=math.sqrt(a2)*(2*(m+1))
+    #a3 = math.sqrt(a2)
+    #print(a3)
     b=27*a/(n-1)
-    return a3
+    if a3 > b :
+        anser=a3
+    else:
+        print('555555555555555555',b)
+        anser=b
+
+    return anser
     #print(b)
 
 
@@ -27,23 +33,28 @@ def fun_trans_l(epsilon_l,m,n,d):
 
 
 # 每位所满足的隐私预算（本地）
-epsilon_l = 1
+epsilon_l = 0
 epsilon_c=2.1
 # 特征数
-m=4
+m=3
 # 数据总量
-n=10000
+n=434874
 #print(math.sqrt(4))
-fun_trans_c(epsilon_l,m,n,0.01)
-
-fun_trans_l(epsilon_c,m,n,0.01)
+an1=fun_trans_c(epsilon_l,m,n,0.01)
+print(an1)
+#fun_trans_l(epsilon_c,m,n,0.01)
 
 # 画图
-x = np.linspace(1, 1000 , 100) # 生成-5到5之间的51个点的一维元组
+x = np.linspace(0, 35 , 1000) # 生成-5到5之间的51个点的一维元组
 #print(x)
 y=[]
+z=[]
 for i in x:
-    y.append(fun_trans_c(i,m,n,0.01))
+    xx=fun_trans_c(i,m,n,0.01)
+    y.append(xx)
+    z.append([i,xx])
+
+print(z)
 
 plt.plot(x, y)  # 画图
 plt.show()

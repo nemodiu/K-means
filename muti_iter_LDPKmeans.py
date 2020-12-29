@@ -232,7 +232,7 @@ def measurescore(test_data, y_true,y_pred):
 
 
 # 参数设置：
-Epsilon=.999  # 隐私预算
+Epsilon=20.999  # 隐私预算
 k_num=4     # 聚类个数
 iter_max_times=20
 # 初始中心点
