@@ -29,5 +29,8 @@ print()
 a=np.array([])
 print(a.shape)
 
-if not a.shape[1]:
-    print("aaa")
+
+arr=np.arange(16).reshape(4,-1)
+print(arr)
+for x in arr:
+    print(x,x.shape)
