@@ -38,14 +38,14 @@ epsilon_c=2.1
 # 特征数
 m=3
 # 数据总量
-n=434874
+n=5000000
 #print(math.sqrt(4))
 an1=fun_trans_c(epsilon_l,m,n,0.01)
 print(an1)
 #fun_trans_l(epsilon_c,m,n,0.01)
 
 # 画图
-x = np.linspace(0, 35 , 1000) # 生成-5到5之间的51个点的一维元组
+x = np.linspace(0, 55 , 1000) # 生成-5到5之间的51个点的一维元组
 #print(x)
 y=[]
 z=[]

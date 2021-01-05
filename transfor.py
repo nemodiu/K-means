@@ -28,6 +28,12 @@ def dTob(n, pre=4):
     把一个带小数的十进制数n转换成二进制
     小数点后面保留pre位小数
     '''
+    if n==0:
+        return ".0000000000"
+    if n==1:
+        return ".1111111111"
+
+
     string_number1 = str(n) #number1 表示十进制数，number2表示二进制数
     flag = False
     for i in string_number1: #判断是否含小数部分
@@ -67,8 +73,60 @@ def dTob(n, pre=4):
         string_number = ''.join([str(j) for j in l2[::-1]])
         return int(string_number)
 
-a=dTob(.7,10)
-b=dTob(.8001,10)
-print(a,bTod(float(a),10))
-print(b,bTod(float(b),10))
+
+
+def decimal_to_binary(num,prec= 10):
+    '''#将小数转化为二进制数'''
+    if num==1:
+        return "1111111111"
+    str_bin = ''
+    if num < 0:
+        str_bin += '1'
+    else:
+        str_bin += '0'
+    count = 1
+    num = abs(num)
+    prec+=1
+    while(count < prec):
+        if int(num*2) == 1:
+            str_bin += '1'
+            num = num*2 - int(num*2)
+        else:
+            num *= 2
+            str_bin += '0'
+        count += 1
+    return str_bin[1:]
+
+def binary_to_decimal(n, pre=4):
+    '''
+    把一个带小数的二进制数n转换成十进制
+    小数点后面保留pre位小数
+    '''
+    string_decimal = n
+    decimal=0
+    for i in range(len(string_decimal)):
+        decimal += 2 ** (-i - 1) * int(string_decimal[i])  # 小数部分化成二进制
+    return decimal
+
+
+
+
+a=decimal_to_binary(1,10)
+print(a)
+b=binary_to_decimal(a,4)
+
+print(b)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
