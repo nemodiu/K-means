@@ -4,6 +4,20 @@ import matplotlib.pyplot as plt
 from collections import  Counter
 from sklearn import preprocessing
 import transfor
+
+def string_to_int(string):
+    data=[]
+    for x in string:
+        data.append(int(x))
+    return data
+
+def int_to_string(num):
+    data=[]
+
+    for x in num:
+        data.append(str(x))
+    return data
+
 T=10
 method3_data, y_true = make_blobs(n_samples=10, n_features=2, centers=[[.5, .5], [-.5, .5], [.0, -.5]],
                   cluster_std=[0.06, 0.08, 0.08], random_state=4)
@@ -16,9 +30,11 @@ method3_data_minmax= preprocessing.MinMaxScaler().fit_transform(method3_data)
 # np.savetxt('F:\\data_gen\\dataset1\\test1_ori.csv',method3_data,delimiter=',')
 # np.savetxt('F:\\data_gen\\dataset1\\test_norm.csv',method3_data_minmax,delimiter=',')
 data_set1="F:\\data_gen\\dataset1\\test_norm.csv"
-
 method1_data = np.loadtxt(open(data_set1,"rb"),delimiter=",",skiprows=0)
 
+print(method1_data.shape)
+
+#
 
 
 
@@ -28,24 +44,37 @@ untrans_list=method1_data.reshape(-1,1)
 
 trans_list=[]
 for x in untrans_list:
+    temp_list=transfor.decimal_to_binary(x[0],T)
+    #print(temp_list)
+    temp_list=string_to_int(temp_list)
 
-    trans_list.append(transfor.decimal_to_binary(x[0],T))
+    trans_list.extend(temp_list)
 
-trans=np.array(trans_list)
+trans=np.array(trans_list).reshape(method1_data.shape[0],method1_data.shape[1]*10)
+
+#np.savetxt('F:\\data_gen\\dataset1\\test1_norm_01.csv',trans,delimiter=',')
+
+# print(method3_data)
+print(trans,trans.shape)
 
 
 
+# 还原
 
-# print(trans_list)
-#
-#
 # cover_list=[]
-# for x in trans_list:
+# for x in trans.reshape(-1,T):
 #
-#     cover_list.append(transfor.binary_to_decimal(x))
 #
+#
+#     x=int_to_string(x)
+#
+#     b=transfor.binary_to_decimal(x)
+#
+#     cover_list.append(b)
+#
+# cover_list=np.array(cover_list).reshape(method3_data.shape)
 # print(cover_list)
-# print(untrans_list)
+
 
 
 

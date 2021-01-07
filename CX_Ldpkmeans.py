@@ -94,7 +94,7 @@ def group1(true_list,centroids_list,pertutb_list):
 
 
 
-Epsilon=1
+Epsilon=0.0025
 K=3
 
 
@@ -122,19 +122,33 @@ K=3
 
 #2
 
-centers=np.array([[-.2, .7], [-.2, -.2], [.2, .2], [.7,.7]])
-centers=np.random.random((4,2))
-print(centers)
+# centers=np.array([[-.2, .7], [-.2, -.2], [.2, .2], [.7,.7]])
+# centers=np.random.random((4,2))
+# print(centers)
+#
+# method3_data, y_true = make_blobs(n_samples=5000000, n_features=2, centers=[[.5, -.5], [-.5, .5], [.0, -.5]],
+#                   cluster_std=[0.06, 0.08, 0.08], random_state=9)
+#
+# method3_data_minmax= preprocessing.MinMaxScaler().fit_transform(method3_data)
+#
+# #print(method3_data_minmax.shape,method3_data_minmax[:],method3_data)
+#
+# perturb_list2=perturb(method3_data,Epsilon)
+#
+# group_result1=group1(method3_data,centers,perturb_list2)
+# for x in group_result1:
+#     print(len(x))
 
-method3_data, y_true = make_blobs(n_samples=5000000, n_features=2, centers=[[.5, -.5], [-.5, .5], [.0, -.5]],
-                  cluster_std=[0.06, 0.08, 0.08], random_state=9)
 
-method3_data_minmax= preprocessing.MinMaxScaler().fit_transform(method3_data)
+# 数据扰动
 
-#print(method3_data_minmax.shape,method3_data_minmax[:],method3_data)
+data_set3="F:\\data_gen\\dataset1\\test1_norm_01.csv"
+method1_data3 = np.loadtxt(open(data_set3,"rb"),delimiter=",",skiprows=0,dtype=int)
 
-perturb_list2=perturb(method3_data,Epsilon)
+print(method1_data3.shape,np.sum(method1_data3,axis=0))
 
-group_result1=group1(method3_data,centers,perturb_list2)
-for x in group_result1:
-    print(len(x))
+perturb_method1_data3=perturb(method1_data3,Epsilon)
+
+print(perturb_method1_data3.shape,np.sum(perturb_method1_data3,axis=0))
+
+np.savetxt('F:\\data_gen\\dataset1\\perturb_p05_test1_norm_01.csv',perturb_method1_data3,delimiter=',')

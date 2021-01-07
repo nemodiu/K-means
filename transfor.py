@@ -110,12 +110,12 @@ def binary_to_decimal(n, pre=4):
 
 
 
-
-a=decimal_to_binary(1,10)
-print(a)
-b=binary_to_decimal(a,4)
-
-print(b)
+#
+# a=decimal_to_binary(1,10)
+# print(a)
+# b=binary_to_decimal(a,4)
+#
+# print(b)
 
 
 

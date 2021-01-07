@@ -36,7 +36,7 @@ def fun_trans_l(epsilon_l,m,n,d):
 epsilon_l = 0
 epsilon_c=2.1
 # 特征数
-m=3
+m=2
 # 数据总量
 n=5000000
 #print(math.sqrt(4))
@@ -45,7 +45,7 @@ print(an1)
 #fun_trans_l(epsilon_c,m,n,0.01)
 
 # 画图
-x = np.linspace(0, 55 , 1000) # 生成-5到5之间的51个点的一维元组
+x = np.linspace(1, 46 , 100) # 生成-5到5之间的51个点的一维元组
 #print(x)
 y=[]
 z=[]

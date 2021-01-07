@@ -34,3 +34,13 @@ arr=np.arange(16).reshape(4,-1)
 print(arr)
 for x in arr:
     print(x,x.shape)
+
+def string_to_int(string):
+    data=[]
+    for x in string:
+        data.append(int(x))
+    return data
+
+a='0111100110'
+
+print(string_to_int(a))
