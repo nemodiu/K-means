@@ -2,6 +2,7 @@ import os
 import numpy as np
 from sklearn import preprocessing
 import pandas as pd
+
 import random
 
 # data = pd.read_csv('F:\\taxi.csv')
@@ -29,5 +30,3 @@ print(a,a.shape)
 b=a.tolist()
 print(type(b))
 
-c=random.random()
-print(c,type(c))

@@ -3,7 +3,7 @@ from sklearn.datasets import make_blobs
 from collections import  Counter
 from sklearn import preprocessing
 from sklearn import metrics
-import random
+
 def bernoulli(probability):
     arr_ber = np.random.rand(1, 1)
     if arr_ber<=probability:
@@ -126,7 +126,7 @@ def measurescore(test_data, y_true,y_pred):
 T=10
 Epsilon=1
 K=3
-Time=300
+Time=10
 m=2
 data_set3="D:\\data_gen\\dataset1\\small_small_perturb_20_test1_norm_01.csv"
 method1_data3 = np.loadtxt(open(data_set3,"rb"),delimiter=",",skiprows=0,dtype=int)
@@ -143,18 +143,12 @@ print(method1_data2.shape,method1_data1.shape)
 # centroids0=[[0.24921172, 0.77609598],
 #  [0.54118091, 0.21936071],
 #  [0.83313437 ,0.77611087]]
-# centroids=[[0.00294825, 0.95033923],
-#  [0.57762487 ,0.87937011],
-#  [0.54204068, 0.99572044]]
+# centroids=[[0.24921172, 0.77609598],
+#  [0.54118091, 0.21936071],
+#  [0.24921172, 0.77609598]]
 # cen=np.array(centroids)
 
-centroids=[[0.40918427, 0.37177903],
- [0.76578402, 0.90017164],
- [0.17774417 ,0.25584798]]
-cen=np.array(centroids)
-
-
-#cen=np.random.random((K,2))
+cen=np.random.random((K,2))
 print(cen)
 
 flag=0
@@ -173,7 +167,7 @@ for i in range(Time):
     for x in group_list:
         if not x:
             new_cen.append(np.random.random(2))
-            print("warning__1")
+            print(1)
         else:
             x = np.array(x)
             # print(x.shape)
@@ -183,13 +177,7 @@ for i in range(Time):
             temp = []
             for xx in agg_list:
                 xx_result = compute_norm(xx, T)
-                if xx_result>1 or xx_result<0:
-                    temp.append(random.random())
-                    print("warning__2 is :",xx_result)
-
-                else:
-                    temp.append(xx_result)
-
+                temp.append(xx_result)
                 # print(xx,xx.shape)
             new_cen.append(temp)
 
