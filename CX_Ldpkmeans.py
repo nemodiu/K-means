@@ -3,7 +3,7 @@ from sklearn.datasets import make_blobs
 from collections import  Counter
 from sklearn import preprocessing
 from sklearn import metrics
-
+import random
 def bernoulli(probability):
     arr_ber = np.random.rand(1, 1)
     if arr_ber<=probability:
@@ -40,9 +40,15 @@ def aggregeate(unaggregeate_list,privacy_cost):
     #print("******************f=",probility)
     list=np.sum(unaggregeate_list,axis=0)
     num=unaggregeate_list.shape[0]
+    #print("num:",num)
     aggregeate_list=[]
     for x in list:
         a=(x-(0.5*probility*num))/(1-probility)
+        if a<0:
+            a=0
+        if a>num:
+            a=num
+        #print(a)
         aggregeate_list.append(a)
     aggregeate_list=np.array(aggregeate_list)/unaggregeate_list.shape[0]
 
@@ -124,32 +130,35 @@ def measurescore(test_data, y_true,y_pred):
     return result_score
 
 T=10
-Epsilon=1
+Epsilon=0.01/2
 K=3
 Time=10
 m=2
-data_set3="D:\\data_gen\\dataset1\\small_small_perturb_20_test1_norm_01.csv"
+data_set3="D:\\data_gen\\dataset1\\perturb_p1_test1_norm_01.csv"
 method1_data3 = np.loadtxt(open(data_set3,"rb"),delimiter=",",skiprows=0,dtype=int)
 
-data_set2="D:\\data_gen\\dataset1\\small_small_test1_norm.csv"
+data_set2="D:\\data_gen\\dataset1\\test1_norm.csv"
 method1_data2 = np.loadtxt(open(data_set2,"rb"),delimiter=",",skiprows=0)
 
-data_set1="D:\\data_gen\\dataset1\\small_lable.csv"
+data_set1="D:\\data_gen\\dataset1\\lable.csv"
 method1_data1 = np.loadtxt(open(data_set1,"rb"),delimiter=",",skiprows=0,dtype=int)
 
 print(method1_data3.shape,np.sum(method1_data3,axis=0))
 print(method1_data2.shape,method1_data1.shape)
 
-# centroids0=[[0.24921172, 0.77609598],
-#  [0.54118091, 0.21936071],
-#  [0.83313437 ,0.77611087]]
+
 # centroids=[[0.24921172, 0.77609598],
 #  [0.54118091, 0.21936071],
 #  [0.24921172, 0.77609598]]
 # cen=np.array(centroids)
 
-cen=np.random.random((K,2))
+cen=np.random.random((K,m))
 print(cen)
+
+# centroids0=[[0.24921172, 0.77609598],
+#  [0.54118091, 0.21936071],
+#  [0.83313437 ,0.77611087]]
+# cen=np.array(centroids0)
 
 flag=0
 for i in range(Time):
@@ -167,6 +176,9 @@ for i in range(Time):
     for x in group_list:
         if not x:
             new_cen.append(np.random.random(2))
+
+            print("warning__1")
+
             print(1)
         else:
             x = np.array(x)
@@ -177,7 +189,17 @@ for i in range(Time):
             temp = []
             for xx in agg_list:
                 xx_result = compute_norm(xx, T)
-                temp.append(xx_result)
+
+                if xx_result>1 or xx_result<0:
+                    temp.append(random.random())
+                    print("warning__2 is :",xx_result)
+
+                else:
+                    temp.append(xx_result)
+            print(temp,"cen:")
+
+
+
                 # print(xx,xx.shape)
             new_cen.append(temp)
 
