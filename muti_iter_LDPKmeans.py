@@ -124,6 +124,34 @@ def group(true_list,centroids_list):
 
     return np.array(swap_k_list).reshape(true_list.shape[0],1)+1
 
+def group1(true_list,swap_k_list,k_num,m):
+
+    group_true_list=[]
+    for x in range(k_num):
+
+        group_true_list.append([])
+    for x in range(len(swap_k_list)):
+
+        group_true_list[int(swap_k_list[x])-1].append(true_list[x])
+
+    cen=[]
+    for x in group_true_list:
+        xx=np.array(x).reshape((-1,m))
+
+        if x:
+            cen1 = np.sum(xx, axis=0) / (xx.shape[0])
+            cen.append(cen1)
+        else:
+            cen1 = np.random.random(m)
+            cen.append(cen1)
+
+
+
+
+
+
+    return np.array(cen)
+
 
 def initialize(Epsilon,k_num,test_data):
     test_data = test_data[:]
@@ -182,13 +210,14 @@ def updatecentroid(swap_perturb_true_data, swap_perturb_zero_list,swap_perturb_z
 
     swap_result=np.array(swap_result)
     c_list_swap=np.array(c_list_swap).reshape(-1,1)
+    print("预测counter",c_list_swap.reshape((-1)))
     print(swap_result)
-    print(c_list_swap)
+
     #for x in swap_result:
 
     #print(swap_result.shape, c_list_swap.shape)
     update_centroids=swap_result/c_list_swap
-    print(update_centroids)
+    #print(update_centroids)
     info=0
     for i,x in enumerate( update_centroids):
         flag=0
@@ -197,10 +226,10 @@ def updatecentroid(swap_perturb_true_data, swap_perturb_zero_list,swap_perturb_z
                 flag=1
                 info=1
         if flag==1:
-            update_centroids[i]=(np.random.rand(update_centroids.shape[1],)-.5)*2
+            update_centroids[i]=np.random.rand(update_centroids.shape[1],)
+            print("修正过信息：",i,update_centroids[i])
 
-    if info==1:
-        print("修正过信息：",update_centroids)
+
     return update_centroids
 
 
@@ -232,127 +261,206 @@ def measurescore(test_data, y_true,y_pred):
 
 
 # 参数设置：
-Epsilon=20.999  # 隐私预算
-k_num=4     # 聚类个数
-iter_max_times=20
+#Epsilon=0.55  # 隐私预算
+k_num=10     # 聚类个数
+iter_max_times=5
+m=2
 # 初始中心点
 #test_a=np.array( [[0.5,0.3,-0.2,-0.6],[0.8,0.2,0.3,0.1],[-0.2,-0.6,-0.8,-0.1],])
 #test_a=np.array([[0.5, 0.8, -0.4], [-0.2, 0.1, 0.6], [0.7, 0.8, -0.4], [-0.5,-0.1,-0.2],[-0.7,0.6,0.5]])
 #test_a=np.array([[0.6, 0.2, 0.8], [0.4, 0, 0.6],[0.1, -0.6, 0.5],[-0.8,-0.2,0.3],[-0.6,-0.4,0.1]])
 #test_a=np.array( [[0.5,0.1,0.7],[0.1, -0.6, 0.5],[-0.7,-0.3,0.2],])
 
-test_a=(np.random.rand(4,2)-.5)*2
-iter_centroid =test_a  # 初始中心点
-print ("初始中心点：",iter_centroid)
+# test_a=np.random.rand(k_num,m)
+# iter_centroid =test_a  # 初始中心点
+# print ("初始中心点：",iter_centroid)
+
+
+# centroids0=[
+#  [0.84393223 ,0.5978422  ,0.12718662],
+#  [0.14040824, 0.26979882, 0.19129719],
+#  [0.33183508 ,0.13331432, 0.19974007],
+#  [0.53883746, 0.20067335 ,0.42218252],
+#  [0.60406409, 0.39395046, 0.15053986],
+#  [0.74744518 ,0.84009436 ,0.11951312],
+#  [0.60129929, 0.72145621, 0.23237307],
+#  [0.41503543 ,0.47182062, 0.14544407],
+#  [0.69137793, 0.65182481, 0.47711987],
+#  [0.63040795 ,0.12367927 ,0.18753085]]
+#
+#
+# iter_centroid=np.array(centroids0)
+
+
+
 
 # 提取数据集
 # 方法1 本地读取
-data_set1="data\\Simulation_data.csv"
-data_set2="data\\test1.csv"
-method1_data = np.loadtxt(open(data_set1,"rb"),delimiter=",",skiprows=0)
+
+
+
+data_set1="D:\\data_gen\\dataset4\\geo6_norm.csv"
+data_set2="D:\\data_gen\\dataset4\\geo6_label.csv"
+method1_data = np.loadtxt(open(data_set1,"rb"),delimiter=",",dtype="float16",skiprows=0)[:8000000,:]
+y_true = np.loadtxt(open(data_set2,"rb"),delimiter=",",dtype=int,skiprows=0)[:8000000 ]
 # 方法2 内存生成
-a=[[0.8, 0.8], [0.4, 0.4],[-0.4, -0.4],[-0.8,-0.8],[0.5,0.1]]
-a1=np.array([a[0]]).repeat(10000,axis=0)
-a2=np.array([a[1]]).repeat(20000,axis=0)
-a3=np.array([a[2]]).repeat(40000,axis=0)
-a4=np.array([a[3]]).repeat(20000,axis=0)
-a5=np.array([a[4]]).repeat(1,axis=0)
-method2_data=np.vstack((a1,a2,a3,a4,a5))
+# a=[[0.8, 0.8], [0.4, 0.4],[-0.4, -0.4],[-0.8,-0.8],[0.5,0.1]]
+# a1=np.array([a[0]]).repeat(10000,axis=0)
+# a2=np.array([a[1]]).repeat(20000,axis=0)
+# a3=np.array([a[2]]).repeat(40000,axis=0)
+# a4=np.array([a[3]]).repeat(20000,axis=0)
+# a5=np.array([a[4]]).repeat(1,axis=0)
+# method2_data=np.vstack((a1,a2,a3,a4,a5))
 
 # 方法3 函数生成
-method3_data, y_true = make_blobs(n_samples=100000, n_features=2, centers=[[-.7, -.7], [-.2, -.2], [.2, .2], [.7,.7]],
-                  cluster_std=[0.06, 0.08, 0.08, 0.06], random_state=9)
-
-best_ch_score=metrics.calinski_harabasz_score(method3_data,y_true)
-#best_score_sc = metrics.silhouette_score(method3_data, y_true)
-best_score_db=metrics.davies_bouldin_score(method3_data, y_true)
+# method3_data, y_true = make_blobs(n_samples=100000, n_features=2, centers=[[-.7, -.7], [-.2, -.2], [.2, .2], [.7,.7]],
+#                   cluster_std=[0.06, 0.08, 0.08, 0.06], random_state=9)
+#
+# best_ch_score=metrics.calinski_harabasz_score(method3_data,y_true)
+# #best_score_sc = metrics.silhouette_score(method3_data, y_true)
+# best_score_db=metrics.davies_bouldin_score(method
+# 3_data, y_true)
 
 # 数据集选择
-test_data=method3_data
+test_data=method1_data
 # 初始化
-test_data, perturb_zero_list, perturb_true_data,perturb_zero_list_c=initialize(Epsilon, k_num, test_data)
+for Epsilon in [ 	51.111]:
 
-# 循环迭代
+    for x in range(1):
+        test_a = np.random.rand(k_num, m)
+        iter_centroid = test_a  # 初始中心点
+        print("初始中心点：", iter_centroid)
 
-score_list=[]
-swap_k=group(test_data,iter_centroid)
+        print("the", Epsilon, "-th ")
 
-for t in range(iter_max_times):
+        test_data, perturb_zero_list, perturb_true_data, perturb_zero_list_c = initialize(Epsilon, k_num, test_data)
 
-    print ("the",t+1,  "-th iter swap counter")
-    print (Counter(swap_k.flatten()))
-    swap_perturb_zero_list, swap_perturb_true_data = swap(swap_k, perturb_true_data, perturb_zero_list)
-    swap_perturb_zero_list_c = swap_c(swap_k, perturb_zero_list_c, k_num)
+        # 循环迭代
 
-    update_centroids=updatecentroid(swap_perturb_true_data,swap_perturb_zero_list,swap_perturb_zero_list_c)
+        score_list = []
+        swap_k = group(test_data, iter_centroid)
 
-    # 分数计算
-    y_pred=group(test_data,update_centroids)
-    score=measurescore(test_data,y_true,y_pred)
-    score_list.append(score)
-    tb = pt.PrettyTable()
-    tb.field_names = ["Calinski Harabasz Score ", "davies_bouldin_score", "Mutual Information based scores ", "Adjusted Rand index", "v_measure_score"]
-    tb.add_row(score)
-    print(tb)
+        for t in range(iter_max_times):
+
+            print("the", t + 1, "-th iter swap counter")
+            dic = dict(Counter(swap_k.flatten()))
+            temp_0 = []
+            for i in sorted(dic):
+                temp_0.append(dic[i])
+            print("真实counter", np.array(temp_0))
+
+            swap_perturb_zero_list, swap_perturb_true_data = swap(swap_k, perturb_true_data, perturb_zero_list)
+            swap_perturb_zero_list_c = swap_c(swap_k, perturb_zero_list_c, k_num)
+
+            update_centroids = updatecentroid(swap_perturb_true_data, swap_perturb_zero_list, swap_perturb_zero_list_c)
+            print("真实centroid", group1(test_data, swap_k, k_num, m))
+            print("预测centroid", update_centroids)
+
+            # 分数计算
+            y_pred = group(test_data, update_centroids)
+            score = measurescore(test_data, y_true, y_pred)
+            score_list.append(score)
+            tb = pt.PrettyTable()
+            tb.field_names = ["Calinski Harabasz Score ", "davies_bouldin_score", "Mutual Information based scores ",
+                              "Adjusted Rand index", "v_measure_score"]
+            tb.add_row(score)
+            print(tb)
+
+            # 排序 中止循环条件
+            update_centroids = np.sort(update_centroids, axis=0)
+            iter_centroid = np.sort(iter_centroid, axis=0)
+            if (update_centroids == iter_centroid).all():
+                break
+            iter_centroid = update_centroids
+            swap_k = y_pred
+
+        score_list = np.array(score_list)
+        print(score_list, score_list.shape)
+        final_score = np.array(
+            [np.max(score_list[:, 0], axis=0), np.min(score_list[:, 1], axis=0), np.max(score_list[:, 2], axis=0),
+             np.max(score_list[:, 3], axis=0), np.max(score_list[:, 4], axis=0)])
+
+        print(final_score, final_score.shape)
+
+        test_data=np.array([])
+        perturb_zero_list=np.array([])
+        perturb_true_data=np.array([])
+        perturb_zero_list_c=np.array([])
 
 
-    # 排序 中止循环条件
-    update_centroids = np.sort(update_centroids, axis=0)
-    iter_centroid = np.sort(iter_centroid, axis=0)
-    if (update_centroids==iter_centroid).all():
-        break
-    iter_centroid=update_centroids
-    swap_k=y_pred
-
-score_list=np.array(score_list)
-print(score_list,score_list.shape)
-final_score=np.array([np.max(score_list[:,0],axis=0),np.min(score_list[:,1],axis=0),np.max(score_list[:,2],axis=0),
-             np.max(score_list[:,3],axis=0),np.max(score_list[:,4],axis=0)])
-
-print(final_score,final_score.shape)
-
-# compare score
-
-print("Best score_ch:", best_ch_score)
 
 
 
 
 
-print ("恢复数据:perturb_zero_list")
-#print (perturb_zero_list.shape)
-perturb_zero_list=perturb_zero_list.reshape(k_num-1,test_data.shape[0],test_data.shape[1])
-#print (perturb_zero_list.shape)
-check_result=[]
-for i,x in enumerate(perturb_zero_list):
-    temp = []
-    #print (x.shape)
-    #print("-----------The",i+2,"-th centroid-------------------- ")
-    for xx in x.T:
-        #print(xx.shape)
-        a = ldp_agg(Epsilon, xx)
-        #print(a)
-        temp.append(a)
-    check_result.append(temp)
 
-print ("--------------compare result-----------------")
 
-result_first=[]
-print ("恢复数据:perturb_true_data")
-for x in  perturb_true_data.T:
-    a = ldp_agg(Epsilon, x)
-    result_first.append(a)
 
-# swap_result.insert(0,swap_result_first)
-check_result.insert(0,result_first)
-# print("swap_result:",swap_result)
-print("check_result:",check_result)
 
-print ("恢复数据:perturb_zero_list_c")
-c_list=[]
-perturb_zero_list_c=perturb_zero_list_c.reshape(-1,k_num)
-print(perturb_zero_list_c.shape)
-for x in perturb_zero_list_c.T:
-    a=ldp_agg(Epsilon,x)
-    c_list.append(a)
-print(c_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # compare score
+
+        # print("Best score_ch:", best_ch_score)
+
+        # print("恢复数据:perturb_zero_list")
+        # # print (perturb_zero_list.shape)
+        # perturb_zero_list = perturb_zero_list.reshape(k_num - 1, test_data.shape[0], test_data.shape[1])
+        # # print (perturb_zero_list.shape)
+        # check_result = []
+        # for i, x in enumerate(perturb_zero_list):
+        #     temp = []
+        #     # print (x.shape)
+        #     # print("-----------The",i+2,"-th centroid-------------------- ")
+        #     for xx in x.T:
+        #         # print(xx.shape)
+        #         a = ldp_agg(Epsilon, xx)
+        #         # print(a)
+        #         temp.append(a)
+        #     check_result.append(temp)
+        #
+        # print("--------------compare result-----------------")
+        #
+        # result_first = []
+        # print("恢复数据:perturb_true_data")
+        # for x in perturb_true_data.T:
+        #     a = ldp_agg(Epsilon, x)
+        #     result_first.append(a)
+        #
+        # # swap_result.insert(0,swap_result_first)
+        # check_result.insert(0, result_first)
+        # # print("swap_result:",swap_result)
+        # print("check_result:", check_result)
+        #
+        # print("恢复数据:perturb_zero_list_c")
+        # c_list = []
+        # perturb_zero_list_c = perturb_zero_list_c.reshape(-1, k_num)
+        # print(perturb_zero_list_c.shape)
+        # for x in perturb_zero_list_c.T:
+        #     a = ldp_agg(Epsilon, x)
+        #     c_list.append(a)
+        # print(c_list)
+
+
+
+
+
+

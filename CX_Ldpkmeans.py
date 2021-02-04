@@ -37,6 +37,7 @@ def perturb(list,privacy_cost):
 
 def aggregeate(unaggregeate_list,privacy_cost):
     probility = 2 / (np.exp(privacy_cost) + 1)
+    #print(probility,2 / (np.exp(privacy_cost/2) + 1))
     #print("******************f=",probility)
     list=np.sum(unaggregeate_list,axis=0)
     num=unaggregeate_list.shape[0]
@@ -89,13 +90,16 @@ def group1(true_list,centroids_list,pertutb_list):
 
 
     group_list = []
+    group_true_list=[]
     for x in range(centroids_list.shape[0]):
         group_list.append([])
+        group_true_list.append([])
     for x in range(len(swap_k_list)):
         group_list[swap_k_list[x]].append(pertutb_list[x])
+        group_true_list[swap_k_list[x]].append(true_list[x])
 
 
-    return group_list,np.array(swap_k_list)
+    return group_list,np.array(swap_k_list),group_true_list
 
 def compute_norm(norm,T):
     result=0
@@ -129,21 +133,25 @@ def measurescore(test_data, y_true,y_pred):
 
     return result_score
 
+
 T=10
-Epsilon=0.01/2
-K=3
-Time=10
-m=2
-data_set3="D:\\data_gen\\dataset1\\perturb_p1_test1_norm_01.csv"
+Epsilon=0.01667
+K=10
+Time=20
+m=3
+
+# 扰动数据
+data_set3="D:\\data_gen\\dataset2\\perturb_2_3D_norm_01.csv"
 method1_data3 = np.loadtxt(open(data_set3,"rb"),delimiter=",",skiprows=0,dtype=int)
-
-data_set2="D:\\data_gen\\dataset1\\test1_norm.csv"
+# 原始数据
+data_set2="D:\\data_gen\\dataset2\\3D_norm.csv"
 method1_data2 = np.loadtxt(open(data_set2,"rb"),delimiter=",",skiprows=0)
-
-data_set1="D:\\data_gen\\dataset1\\lable.csv"
+# 标签
+data_set1="D:\\data_gen\\dataset2\\label.csv"
 method1_data1 = np.loadtxt(open(data_set1,"rb"),delimiter=",",skiprows=0,dtype=int)
 
 print(method1_data3.shape,np.sum(method1_data3,axis=0))
+
 print(method1_data2.shape,method1_data1.shape)
 
 
@@ -155,27 +163,56 @@ print(method1_data2.shape,method1_data1.shape)
 cen=np.random.random((K,m))
 print(cen)
 
-# centroids0=[[0.24921172, 0.77609598],
-#  [0.54118091, 0.21936071],
-#  [0.83313437 ,0.77611087]]
+
+
+
+# centroids0=[
+#  [0.84393223 ,0.5978422  ,0.12718662],
+#  [0.14040824, 0.26979882, 0.19129719],
+#  [0.33183508 ,0.13331432, 0.19974007],
+#  [0.53883746, 0.20067335 ,0.42218252],
+#  [0.60406409, 0.39395046, 0.15053986],
+#  [0.74744518 ,0.84009436 ,0.11951312],
+#  [0.60129929, 0.72145621, 0.23237307],
+#  [0.41503543 ,0.47182062, 0.14544407],
+#  [0.69137793, 0.65182481, 0.47711987],
+#  [0.63040795 ,0.12367927 ,0.18753085]]
+#
+#
 # cen=np.array(centroids0)
 
+print("真实标签",Counter(method1_data1))
 flag=0
 for i in range(Time):
 
-    group_list,swap_k_list=group1(method1_data2,cen,method1_data3)
+    group_list,swap_k_list,group_true_list=group1(method1_data2,cen,method1_data3)
     score=measurescore(method1_data2,method1_data1 ,swap_k_list)
-    print(score)
-
+    print("**********score:",score)
     if flag==score[0]:
         break
+
+
+    true_cen=[]
+    for x in group_true_list:
+        if not x:
+            true_cen.append([0 for x in range(m)])
+
+            print("warning__0")
+
+
+        else:
+            x=np.array(x)
+            true_cen.append(np.sum(x,axis=0)/x.shape[0])
+
+    print("true cen:",np.array(true_cen))
+
 
     flag=score[0]
     # 计算new 中心点
     new_cen=[]
     for x in group_list:
         if not x:
-            new_cen.append(np.random.random(2))
+            new_cen.append(np.random.random(m))
 
             print("warning__1")
 
@@ -200,7 +237,7 @@ for i in range(Time):
 
 
 
-                # print(xx,xx.shape)
+                # print(xx,xx.shape)lable_3D_norm
             new_cen.append(temp)
 
     cen = np.array(new_cen)
@@ -271,14 +308,16 @@ for i in range(Time):
 
 
 # 数据扰动
-
-# data_set3="D:\\data_gen\\dataset1\\small_small_test1_norm_01.csv"
+# l=[0.00666,	0.01667	,0.033	,0.05,	0.0666]
+# data_set3="D:\\data_gen\\dataset2\\3D_norm_01.csv"
 # method1_data3 = np.loadtxt(open(data_set3,"rb"),delimiter=",",skiprows=0,dtype=int)
-#
 # print(method1_data3.shape,np.sum(method1_data3,axis=0))
 #
-# perturb_method1_data3=perturb(method1_data3,Epsilon)
+# for i,x in enumerate(l):
+#     name="perturb_"+str(i+1)+"_3D_norm_01.csv"
+#     perturb_method1_data3 = perturb(method1_data3, x)
 #
-# print(perturb_method1_data3.shape,np.sum(perturb_method1_data3,axis=0))
+#     print(perturb_method1_data3.shape, np.sum(perturb_method1_data3, axis=0))
 #
-# np.savetxt('D:\\data_gen\\dataset1\\small_small_perturb_20_test1_norm_01.csv',perturb_method1_data3,delimiter=',')
+#     np.savetxt('D:\\data_gen\\dataset2\\'+name, perturb_method1_data3, delimiter=',')
+
